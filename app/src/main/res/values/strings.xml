@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="txtAccueill">Hello, bienvenue dans le jeu</string>
+    <string name="btnStart">start</string>
+    <string name="OK">Ok</string>
+    <string name="saisie">Saisi une valeur entre 1 et 100:</string>
+</resources>
