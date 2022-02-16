@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".Bilan"
+            android:exported="true" />
+        <activity
             android:name=".Level4"
             android:exported="true" />
         <activity

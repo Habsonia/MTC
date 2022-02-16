@@ -13,18 +13,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Chronometer
+            android:id="@+id/chronometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clearFormat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="#BDEAE4"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="#63300A"
+            android:textStyle="bold"
+            tools:ignore="TextContrastCheck,TextContrastCheck" />
+
         <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="Session 2: reflixion"
+            android:layout_height="44dp"
+            android:fontFamily="monospace"
+            android:text="Session 2: Attention"
             android:textAlignment="center"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/res"
-            android:layout_width="391dp"
+            android:layout_width="match_parent"
             android:layout_height="41dp"
             android:fontFamily="sans-serif-smallcaps"
             android:textAlignment="center"
@@ -32,19 +47,19 @@
 
         <TextView
             android:id="@+id/enigme"
-            android:layout_width="395dp"
+            android:layout_width="match_parent"
             android:layout_height="119dp"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="0dp"
-            android:fontFamily="cursive"
+            android:fontFamily="monospace"
             android:textAlignment="center"
             android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/quiSuis"
-            android:layout_width="401dp"
+            android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_marginStart="0dp"
             android:fontFamily="casual"
@@ -67,33 +82,41 @@
             android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="281dp"
-            android:orientation="vertical">
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/btnValide"
-                android:layout_width="match_parent"
-                android:layout_height="37dp"
-                android:background="#6200EA"
-                android:fontFamily="@font/fjord_one"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:text="valider"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                tools:ignore="TouchTargetSizeCheck" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="450dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="100dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/btnfinish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="finish" />
+        <Button
+            android:id="@+id/btnfinish"
+            android:layout_width="191dp"
+            android:layout_height="61dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="cancel" />
 
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnValide"
+            android:layout_width="184dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:text="valider"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
 

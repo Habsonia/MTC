@@ -11,15 +11,31 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="3dp">
+        tools:layout_editor_absoluteX="3dp"
+        tools:ignore="MissingConstraints">
+
+        <Chronometer
+            android:id="@+id/chronometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chrono"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="#BDEAE4"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="#7E3F11"
+            android:textStyle="bold"
+            tools:ignore="TextContrastCheck" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/setime"
             android:layout_width="match_parent"
             android:layout_height="43dp"
+            android:fontFamily="monospace"
             android:text="Session 1: rapidité"
             android:textAlignment="center"
-            android:textStyle="bold" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/setPs"
@@ -31,15 +47,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/consigne"
-            android:layout_width="match_parent"
-            android:layout_height="141dp"
-            android:background="#B8B6B6"
-            android:fontFamily="casual"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
         <EditText
             android:id="@+id/enterNumber"
             android:layout_width="match_parent"
@@ -47,6 +54,7 @@
             android:ems="10"
             android:fontFamily="casual"
             android:inputType="textPersonName|numberDecimal"
+            android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <TextView
@@ -63,7 +71,7 @@
             android:layout_height="65dp"
             android:layout_marginStart="150dp"
             android:layout_marginEnd="150dp"
-            android:fontFamily="@font/fjord_one"
+            android:fontFamily="sans-serif-medium"
             android:text="Ok" />
 
     </LinearLayout>
@@ -72,9 +80,13 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="500dp"
+        android:layout_marginEnd="100dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
@@ -82,16 +94,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/fjord_one"
+            android:fontFamily="sans-serif-medium"
             android:text="Cancel" />
-
-        <Button
-            android:id="@+id/btnRec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/fjord_one"
-            android:text="Rec" />
 
     </LinearLayout>
 

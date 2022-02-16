@@ -242,22 +242,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class Level2 extends AppCompatActivity  implements View.OnClickListener{
     private TextView enigme, quiSuis, res;
     private EditText ansewerEnigm;
-    private Button btnValide, btnValid2, btnValid3, btnValid4, btnFinish;
-    private String[] enigmes  = new String[4];
-    private String[] ansewers = new String[4];
-    private boolean bool = true;
+    private Button btnValide, btnFinish;
+    private String[] enigmes  = new String[5];
+    private String[] ansewers = new String[5];
     private  int cmp = 0;
+    Chronometer chronometre;
+    private static final String MY_BACKUP_FILE = "MY_BACKUP_FILE ";
+    private static final String MY_BACKUP_FILE_TIME2 = "MY_BACKUP_FILE_TIME2 ";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,24 +273,28 @@ public class Level2 extends AppCompatActivity  implements View.OnClickListener{
         setContentView(R.layout.activity_level2);
         enigmes[0]  = "rtetou (animal)";
         enigmes[1]  = "brcoita (fruit)";
-        enigmes[2]  = "trahacuti (legumes)";
-        enigmes[3]  = "mmope (fruit)";
+        enigmes[2]  = "trahacuti (legume)";
+        enigmes[3]  = "ongare (fruit)";
 
         ansewers[0] = "tortue";
         ansewers[1] = "abricot";
         ansewers[2] = "artichaut";
-       // ansewers[3] = "pomme";
+        ansewers[3] = "orange";
 
         //btnLunch =findViewById(R.id.btnLunch);
         enigme = findViewById(R.id.enigme);
         quiSuis = findViewById(R.id.quiSuis);
         ansewerEnigm = findViewById(R.id.ansewerEnigm);
         btnValide = findViewById(R.id.btnValide);
+        btnFinish = findViewById(R.id.btnfinish);
+        chronometre = findViewById(R.id.chronometre);
         res = findViewById(R.id.res);
         enigme.setText(enigmes[0]);
         ansewerEnigm.setText("");
         quiSuis.setText("Qui suis-je ? ");
         btnValide.setOnClickListener(this);
+        btnFinish.setOnClickListener(this);
+
 
 
     }
@@ -291,54 +303,89 @@ public class Level2 extends AppCompatActivity  implements View.OnClickListener{
 
     }
     public void valide(View v){
-        int i = 0;
+        int i = 0, j = 0;
         String s = ansewerEnigm.getText().toString();
+        Intent level1 = getIntent();
+        float time = level1.getFloatExtra("time1", 0.0F);
+        String name = level1.getStringExtra("PSEUDO");
+        Log.i("DEBUG", "name2 "+name);
+
+
         if (v == btnValide) {
-            for (i=0;i < enigmes.length - 1; i++) {
+            // un chronometre est demaré lors d'un clique que sur btnValide
+            chronometre.start();
 
-                if (s.equals(ansewers[i])) {
-                    enigme.setText(enigmes[i +1]);
-                    ansewerEnigm.setText("");
-                    res.setText(s);
-                    cmp += 1;
-                    i++;
-                    Log.i("DEBUG", "i: " + i);
-                } else {
-                    res.setText("Reflichissez bien");
-                }
-                Log.i("DEBUG", "i2: " + i);
+                for (i = 0; i < enigmes.length - 1; ++i) {
+                        if (s.equals(ansewers[i])) {
+                            enigme.setText(enigmes[i + 1]);
+                            ansewerEnigm.setText("");
+                            res.setText(s);
+                            cmp += 1;
+                            i++;
+                            res.setText(" ");
+                            Log.i("DEBUG", "i: " + j);
+                        } else {
 
-            if (cmp == 3) {
-                AlertDialog nextLevel = new AlertDialog.Builder(this).create();
-                nextLevel.setTitle("Bravo vous allez passer au niveau suivant ! ");
-                nextLevel.setMessage("Vous avez un score de " + cmp + " sur " + enigmes.length);
-                nextLevel.setButton(AlertDialog.BUTTON_POSITIVE, "OUI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent level3 = new Intent(Level2.this, Level3.class);
-                        startActivity(level3);
+                            ansewerEnigm.setText("");
+                        }}
+                        Log.i("DEBUG", "i2: " + i);
+                        Log.i("DEBUG", "taille: " + enigmes.length);
+
+                        if (cmp == 4) {
+                            // le chrono est arreté si l'utilisation à saisi les 4 bonnes reponses
+                            chronometre.stop();
+
+                            //
+                            double elapsedMillis = SystemClock.elapsedRealtime() - chronometre.getBase();
+                            DecimalFormat df = new DecimalFormat("0.0");
+                            float elapsedMinut = (float) Double.parseDouble(df.format(elapsedMillis / 60000));
+                            getSharedPreferences(MY_BACKUP_FILE, MODE_PRIVATE).edit().putFloat(MY_BACKUP_FILE_TIME2, elapsedMinut).apply();
+                            // garder que un chiffre apres la virgule
+                            AlertDialog nextLevel = new AlertDialog.Builder(this).create();
+                            nextLevel.setTitle("EXERCICE 3: MEMOIRE");
+                            nextLevel.setMessage("Cet exercice vous fera travailler votre capacité de stocker, de mettre à jour de et de recuperer des information au fil du temps " +
+                                    "\nL'exercice 3 consiste à memoriser une grille alpha-numérique qui est visible qu'au bout de 10s");
+                            nextLevel.setButton(AlertDialog.BUTTON_POSITIVE, "GO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent level3 = new Intent(Level2.this, Level3.class);
+                                    level3.putExtra("time2", elapsedMinut);
+                                    level3.putExtra("time1", time);
+                                    level3.putExtra("PSEUDO", name);
+
+                                    startActivity(level3);
+                                }
+                            });
+
+                        nextLevel.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                moveTaskToBack(true);
+                                Process.killProcess(Process.myPid());
+                                System.exit(1);
+                            }
+                        });
+                        nextLevel.show();
+
                     }
-                });
 
-                nextLevel.setButton(AlertDialog.BUTTON_NEGATIVE, "NON", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                nextLevel.show();
             }
-        }
 
         Log.i("DEBUG", "cmp: "+cmp);
 
-            }}
+            }
 
     public void onClick(View v){
+
         valide(v);
+        if (v == btnFinish){
+            moveTaskToBack(true);
+            Process.killProcess(Process.myPid());
+            System.exit(1);
+        }        }
                 }
 
-                }
+
 
 
 

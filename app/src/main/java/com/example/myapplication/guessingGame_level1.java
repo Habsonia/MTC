@@ -6,48 +6,52 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 
 public class guessingGame_level1 extends AppCompatActivity implements View.OnClickListener {
-    private Button btnLevel2, btnOk, btnCancel, btnRec;
-    private TextView Result, setPs, consigne;
+    private Button btnOk, btnCancel;
+    private TextView Result, setPs;
     private EditText enterNumber;
     private int secreteValue;
     private int cmp;
     private String name;
+    String time;
+    Chronometer chronometre;
+    private static final String MY_BACKUP_FILE = "MY_BACKUP_FILE ";
+    private static final String MY_BACKUP_FILE_TIME = "MY_BACKUP_FILE_TIME ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guessing_game_level1);
-        btnLevel2 = findViewById(R.id.btnRec);
+        chronometre = findViewById(R.id.chronometre);
         btnOk = findViewById(R.id.btnOk);
         Result = findViewById(R.id.Result);
         setPs = findViewById(R.id.setPs);
-        consigne = findViewById(R.id.consigne);
         enterNumber = findViewById(R.id.enterNumber);
-
-        btnLevel2.setOnClickListener(this);
+        btnCancel = findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(this);
         btnOk.setOnClickListener(this);
-        this.setPseudo(setPs);
+        setPs.setText("Saisissez une valeur !");
         this.initialisation();
+
     }
-    public void setPseudo(TextView name){
-        Intent main = getIntent();
-        String ps = main.getStringExtra("PSEUDO");
-        name.setText("Bienvenue " + ps+ " ce jeu consiste à vous faire travailler votre rapidité !");
-    }
+    // initialisation
     public void initialisation(){
         cmp = 0;
         secreteValue = 1 + (int) (Math.random() * 100);
         Log.i("DEBUG", "valeur secrete: "+ secreteValue);
-        consigne.setText("Ce jeu consiste à touver la valeur secrete entre 0 et 100 et le programme vous indique si vous devez saisir une valeur" +
-                "plus grande ou plus petit, à vous de jouer !" +
-                "\nSaisissez une valeur");
+
         Result.setText("");
         enterNumber.setText("");
         enterNumber.requestFocus();
@@ -56,51 +60,64 @@ public class guessingGame_level1 extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        Intent main = getIntent();
+        String ps = main.getStringExtra("PSEUDO");
         String res = enterNumber.getText().toString();
-        int resInteger = Integer.valueOf(res);
+        int resInteger = Integer.parseInt(res);
         cmp++;
 
         if (v == btnOk) {
+            chronometre.start();
             if (res.equals("")) {
                 return;
             }
-            
-            if(resInteger == secreteValue) {
-                Result.setText(("Bravo !!" +"\n"+"vous l'avez trouver au bout de " + cmp+ " tentatives"));
-                    AlertDialog nextLevel = new AlertDialog.Builder(this).create();
-                    nextLevel.setTitle("Bravo vous allez passer au jeu suivant! ");
-                    nextLevel.setMessage("Ce jeu à pour but de vos faire travailler votre reflixion\nOUi : Recommencer une partie\nNON : Quitter le jeu ");
-                    nextLevel.setButton(AlertDialog.BUTTON_POSITIVE, "OUI", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent level2 = new Intent(guessingGame_level1.this, Level2.class);
-                            startActivity(level2);
-                        }
-                    });
-                    nextLevel.setButton(AlertDialog.BUTTON_NEGATIVE, "NON", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                          finish();
-                        }
-                    });
-                    nextLevel.show();
-                }
 
-            else if(resInteger > secreteValue) {
+            if (resInteger == secreteValue) {
+                chronometre.stop();
+                double elapsedMillis = SystemClock.elapsedRealtime() - chronometre.getBase();
+                DecimalFormat df = new DecimalFormat("0.0");
+                float elapsedMinut = (float) Double.parseDouble(df.format(elapsedMillis / 60000));
+                getSharedPreferences(MY_BACKUP_FILE, MODE_PRIVATE).edit().putFloat(MY_BACKUP_FILE_TIME, elapsedMinut).apply();
+                AlertDialog nextLevel = new AlertDialog.Builder(this).create();
+                nextLevel.setTitle("EXERCICE2: ATTENTION");
+                nextLevel.setMessage("L'exercice 2 vous fera travailler votre capacité de percevoir de nouvelles informations" +
+                        "\nCet exercice consiste à retrouver le mots d'origine à partir de lettes mélanges, pour vous aider, la catégorie du mot à trouver est entre parenthèses.");
+                nextLevel.setButton(AlertDialog.BUTTON_POSITIVE, "GO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent level2 = new Intent(guessingGame_level1.this, Level2.class);
+                        level2.putExtra("time1", elapsedMinut);
+                        level2.putExtra("PSEUDO", ps);
+                        startActivity(level2);
+                    }
+                });
+                nextLevel.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        moveTaskToBack(true);
+                        Process.killProcess(Process.myPid());
+                        System.exit(1);
+                    }
+                });
+                nextLevel.show();
+
+
+            } else if (resInteger > secreteValue) {
                 Result.setText(("plus petite !!"));
-            }
-            else{
+            } else {
                 Result.setText(("plus grande !!"));
             }
+
         }
         enterNumber.setText("");
         enterNumber.requestFocus();
         if (v == btnCancel) {
-            finish();
+
+            moveTaskToBack(true);
+            Process.killProcess(Process.myPid());
+            System.exit(1);
         }
-        if(v == btnRec){
-            initialisation();
-        } }}
+    }}
 
 
 

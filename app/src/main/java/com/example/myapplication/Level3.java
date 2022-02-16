@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Process;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,18 +18,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Chronometer;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Level3 extends AppCompatActivity implements View.OnClickListener {
     private TextView c0, c1, c2, c3, c4, c5, c6, c7, c8, response;
     private EditText ed0, ed1, ed2, ed3, ed4, ed5, ed6, ed7, ed8;
-    private Button valid, afficheGrille, demarre;
+    private Button valid, afficheGrille, btnCn;
     private String[] tab = {"A", "7", "B", "K", "9", "1", "P", "5", "D", "L", "M", "4", "2", "3", "C", "E", "G", "F", "X", "0", "N", "Q", "W"};
     private String eds0, eds1, eds2, eds3, eds4, eds5, eds6, eds7, eds8;
     private String c00, c11, c22, c33, c44, c55, c66, c77, c88;
     private int score = 0;
     Chronometer chronometre;
+    private static final String MY_BACKUP_FILE = "MY_BACKUP_FILE ";
+    private static final String MY_BACKUP_FILE_TIME3 = "MY_BACKUP_FILE_TIME3 ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +80,13 @@ public class Level3 extends AppCompatActivity implements View.OnClickListener {
         c88 = c8.getText().toString();
         chrono();
         // reste a effacer les textes de la grille au bout de 30 sec
-
-
         response = findViewById(R.id.response);
         valid = findViewById(R.id.valid);
-        demarre = findViewById(R.id.demarre);
         afficheGrille = findViewById(R.id.afficheGrille);
+        btnCn = findViewById(R.id.btnCn);
+        btnCn.setOnClickListener(this);
         valid.setOnClickListener(this);
         afficheGrille.setOnClickListener(this);
-        demarre.setOnClickListener(this);
 
     }
 
@@ -103,7 +106,7 @@ public class Level3 extends AppCompatActivity implements View.OnClickListener {
                 c8.setText("");
 
             }
-        }, 3000);
+        }, 10000);
     }
 
     public int valAlea(int min, int max) {
@@ -113,7 +116,11 @@ public class Level3 extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String rpn = "ici";
+        Intent level1 = getIntent();
+        float time = level1.getFloatExtra("time1", 0.0F);
+        float time2 = level1.getFloatExtra("time2", 0.0F);
+        String name = level1.getStringExtra("PSEUDO");
+
         eds0 = ed0.getText().toString();
         eds1 = ed1.getText().toString();
         eds2 = ed2.getText().toString();
@@ -123,6 +130,7 @@ public class Level3 extends AppCompatActivity implements View.OnClickListener {
         eds6 = ed6.getText().toString();
         eds7 = ed7.getText().toString();
         eds8 = ed8.getText().toString();
+        chronometre.start();
 
 
         if (v == afficheGrille) {
@@ -148,39 +156,56 @@ public class Level3 extends AppCompatActivity implements View.OnClickListener {
 
                     if ((eds0.equals(c00)) && (eds1.equals(c11)) && (eds2.equals(c22)) && (eds3.equals(c33))
                             && (eds4.equals(c44)) && (eds5.equals(c55)) && (eds6.equals(c66)) && (eds7.equals(c77)) && (eds8.equals(c88))) {
-                        score += 1;
-                        Log.i("DEBUG", "score " + score);
-                        response.setText("bonne reponse");
-                    } else {
-                        response.setText("fausse reponse");
-                    }
-                    AlertDialog nextLevel = new AlertDialog.Builder(this).create();
-                    nextLevel.setTitle("Bravo vous allez passer au niveau suivant ! ");
-                    nextLevel.setMessage("Ce jeu à pour but de vos faire travailler votre capacité visuelle, vous devez remplir toutes les cases de grille" +
-                            "pour valider vos reponses \n" +
-                            "OUi : Recommencer une partie\nNON : Quitter");
-                    nextLevel.setButton(AlertDialog.BUTTON_POSITIVE, "OUI", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent level3 = new Intent(Level3.this, Level4.class);
-                            startActivity(level3);
-                        }
-                    });
 
-                    nextLevel.setButton(AlertDialog.BUTTON_NEGATIVE, "NON", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                    nextLevel.show();
+                        chronometre.stop();
+                        float elapsedMillis = SystemClock.elapsedRealtime() - chronometre.getBase();
+                        // garder que un chiffre apres la virgule
+                        DecimalFormat df = new DecimalFormat("0.0");
+                        float elapsedMinut = (float) Double.parseDouble(df.format(elapsedMillis / 60000));
+                        getSharedPreferences(MY_BACKUP_FILE, MODE_PRIVATE).edit().putFloat(MY_BACKUP_FILE_TIME3, elapsedMinut).apply();
+
+                        AlertDialog nextLevel = new AlertDialog.Builder(this).create();
+                        nextLevel.setTitle("EXERCICE 4: OBSERVATION");
+                        nextLevel.setMessage("L'exercice vous fera travailler votre capacité d'observation" +
+                                "\nCet exercice consiste à observer une image");
+
+                        nextLevel.setButton(AlertDialog.BUTTON_POSITIVE, "GO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent level3 = new Intent(Level3.this, Level4.class);
+                                level3.putExtra("time1", time);
+                                level3.putExtra("time2", time2);
+                                level3.putExtra("time3", elapsedMinut);
+                                level3.putExtra("PSEUDO", name);
+                                startActivity(level3);
+                            }
+                        });
+
+                        nextLevel.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                moveTaskToBack(true);
+                                Process.killProcess(Process.myPid());
+                                System.exit(1);
+                            }
+                        });
+                        nextLevel.show();
+                    }
+                    else {
+                        response.setText("Souvenez vous bien !");
+
+                    }
                 }
 
             }
-            /*if (v == demarre){
-                chronometre.start();
-            }*/
+            if (v == btnCn){
+                moveTaskToBack(true);
+                Process.killProcess(Process.myPid());
+                System.exit(1);
+            }
+            }
+
 
 
     }
-}
+

@@ -9,32 +9,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="400dp"
+        android:layout_marginBottom="300dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent" >
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Chronometer
+            android:id="@+id/chronometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clearFormat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="#BDEAE4"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="#171616"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="Session 4: capacité visuelle"
+            android:layout_height="49dp"
+            android:fontFamily="monospace"
+            android:text="Session 4: Observation"
             android:textAlignment="center"
             android:textAllCaps="false"
+            android:textSize="20dp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/img"
             android:layout_width="match_parent"
-            android:layout_height="347dp"
-            app:srcCompat="@drawable/cheval5" />
+            android:layout_height="347dp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="450dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -48,17 +61,38 @@
         <EditText
             android:id="@+id/reponse"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:ems="10"
-            android:inputType="number|textPersonName|numberDecimal"
+            android:inputType="date|textUri|textShortMessage|textLongMessage|textAutoCorrect|numberSigned|textVisiblePassword|textWebEditText|textMultiLine|textNoSuggestions|textFilter|number|datetime|textWebEmailAddress|textPersonName|text|textPhonetic|textCapSentences|textPassword|textAutoComplete|textImeMultiLine|textPostalAddress|numberDecimal|textEmailAddress|numberPassword|textCapWords|phone|textEmailSubject|textCapCharacters|time|textWebPassword"
             android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="600dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btnQt"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:layout_weight="1"
+            android:text="cancel" />
+
         <Button
             android:id="@+id/btnVal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/fjord_one"
+            android:layout_width="188dp"
+            android:layout_height="65dp"
+            android:fontFamily="sans-serif-medium"
             android:text="valider" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
